@@ -1,0 +1,1151 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Sign-in API",
+        "description": "Represents the Microsoft Entra tenant that the user or application is authenticated to that specified organization.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0",
+            "description": "Graph Microsoft Base URL"
+        }
+    ],
+    "paths": {
+        "/auditlogs/signin": {
+            "get": {
+                "summary": "List sign-ins",
+                "description": "Retrieve a list of sign-in objects.",
+                "operationId": "Entra_SignIn_GetSignIns",
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "createdDateTime ge 2021-01-01T00:00:00Z",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "required": false,
+                        "description": "Order items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "createdDateTime desc",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of sign-in objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SignIn"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Show all sign-in activity for the last 7 days",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=createdDateTime ge '2023-12-01T00:00:00Z'",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Suspicious login activity for user",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=userId eq 'user1' and (riskLevelDuringSignIn ne 'none' or riskEventTypes_v2/any(r:r ne 'none'))&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Show me logins for mail@domain.com from Mac OS",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=userPrincipalName eq 'mail@domain.com' and startsWith(deviceDetail/operatingSystem, 'mac') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Show me logins for users on Windows",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=startsWith(deviceDetail/operatingSystem, 'windows') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List logins of iPhone users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=startsWith(deviceDetail/operatingSystem, 'ios') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List logins from Edge",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=startsWith(deviceDetail/browser, 'edge') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Get sign-ins from the Safari browser",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=startsWith(deviceDetail/browser, 'safari') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users who log in using Firefox",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=startsWith(deviceDetail/browser, 'firefox') and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users who sign-in without MFA",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=authenticationRequirement ne 'multiFactorAuthentication' and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users who sign-in to specific application",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=appDisplayName eq '<Application Name>' and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users who sign-in to specific application",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$filter=appId eq '<application-id>' and isInteractive eq true&$orderby=createdDateTime desc",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#auditLogs/signIns",
+                                                "@odata.nextLink": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1",
+                                                "value": [
+                                                    {
+                                                        "id": "66ea54eb-6301-4ee5-be62-ff5a759b0100",
+                                                        "createdDateTime": "2023-12-01T16:03:35Z",
+                                                        "userDisplayName": "Test Contoso",
+                                                        "userPrincipalName": "testaccount1@contoso.com",
+                                                        "userId": "26be570a-ae82-4189-b4e2-a37c6808512d",
+                                                        "appId": "de8bc8b5-d9f9-48b1-a8ad-b748da725064",
+                                                        "appDisplayName": "Graph explorer",
+                                                        "ipAddress": "131.107.159.37",
+                                                        "clientAppUsed": "Browser",
+                                                        "correlationId": "d79f5bee-5860-4832-928f-3133e22ae912",
+                                                        "conditionalAccessStatus": "notApplied",
+                                                        "isInteractive": true,
+                                                        "riskDetail": "none",
+                                                        "riskLevelAggregated": "none",
+                                                        "riskLevelDuringSignIn": "none",
+                                                        "riskState": "none",
+                                                        "riskEventTypes": [],
+                                                        "resourceDisplayName": "Microsoft Graph",
+                                                        "resourceId": "00000003-0000-0000-c000-000000000000",
+                                                        "status": {
+                                                            "errorCode": 0,
+                                                            "failureReason": null,
+                                                            "additionalDetails": null
+                                                        },
+                                                        "deviceDetail": {
+                                                            "deviceId": "",
+                                                            "displayName": null,
+                                                            "operatingSystem": "Windows 10",
+                                                            "browser": "Edge 80.0.361",
+                                                            "isCompliant": null,
+                                                            "isManaged": null,
+                                                            "trustType": null
+                                                        },
+                                                        "location": {
+                                                            "city": "Redmond",
+                                                            "state": "Washington",
+                                                            "countryOrRegion": "US",
+                                                            "geoCoordinates": {
+                                                                "altitude": null,
+                                                                "latitude": 47.68050003051758,
+                                                                "longitude": -122.12094116210938
+                                                            }
+                                                        },
+                                                        "appliedConditionalAccessPolicies": [
+                                                            {
+                                                                "id": "de7e60eb-ed89-4d73-8205-2227def6b7c9",
+                                                                "displayName": "SharePoint limited access for guest workers",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            },
+                                                            {
+                                                                "id": "6701123a-b4c6-48af-8565-565c8bf7cabc",
+                                                                "displayName": "Medium signin risk block",
+                                                                "enforcedGrantControls": [],
+                                                                "enforcedSessionControls": [],
+                                                                "result": "notEnabled"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default": "Access Microsoft Graph using application or delegated permissions"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "SignIn": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#applications(appId,identifierUris,displayName,publisherDomain,signInAudience)"
+                    },
+                    "@odata.link": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=1&$skiptoken=9177f2e3532fcd4c4d225f68f7b9bdf7_1"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the sign-in."
+                            },
+                            "createdDateTime": {
+                                "type": "string",
+                                "description": "The date and time the sign-in occurred."
+                            },
+                            "userDisplayName": {
+                                "type": "string",
+                                "description": "The display name of the user."
+                            },
+                            "userPrincipalName": {
+                                "type": "string",
+                                "description": "The principal name of the user."
+                            },
+                            "userId": {
+                                "type": "string",
+                                "description": "The unique identifier for the user."
+                            },
+                            "appId": {
+                                "type": "string",
+                                "description": "The unique identifier for the application."
+                            },
+                            "appDisplayName": {
+                                "type": "string",
+                                "description": "The display name of the application."
+                            },
+                            "ipAddress": {
+                                "type": "string",
+                                "description": "The IP address of the sign-in."
+                            },
+                            "clientAppUsed": {
+                                "type": "string",
+                                "description": "The client application used for the sign-in."
+                            },
+                            "correlationId": {
+                                "type": "string",
+                                "description": "The correlation ID for the sign-in."
+                            },
+                            "conditionalAccessStatus": {
+                                "type": "string",
+                                "description": "The conditional access status for the sign-in."
+                            },
+                            "isInteractive": {
+                                "type": "boolean",
+                                "description": "Indicates whether the sign-in was interactive."
+                            },
+                            "riskDetail": {
+                                "type": "string",
+                                "description": "The risk detail for the sign-in."
+                            },
+                            "riskLevelAggregated": {
+                                "type": "string",
+                                "description": "The aggregated risk level for the sign-in."
+                            },
+                            "riskLevelDuringSignIn": {
+                                "type": "string",
+                                "description": "The risk level during the sign-in."
+                            },
+                            "riskState": {
+                                "type": "string",
+                                "description": "The risk state for the sign-in."
+                            },
+                            "riskEventTypes": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "The risk event types for the sign-in."
+                            },
+                            "resourceDisplayName": {
+                                "type": "string",
+                                "description": "The display name of the resource."
+                            },
+                            "resourceId": {
+                                "type": "string",
+                                "description": "The unique identifier for the resource."
+                            },
+                            "status": {
+                                "type": "object",
+                                "properties": {
+                                    "errorCode": {
+                                        "type": "integer",
+                                        "description": "The error code of the sign-in."
+                                    },
+                                    "failureReason": {
+                                        "type": "string",
+                                        "description": "The reason for the failure, if any."
+                                    },
+                                    "additionalDetails": {
+                                        "type": "string",
+                                        "description": "Additional details about the sign-in status."
+                                    }
+                                }
+                            },
+                            "deviceDetail": {
+                                "type": "object",
+                                "properties": {
+                                    "deviceId": {
+                                        "type": "string",
+                                        "description": "The unique identifier for the device."
+                                    },
+                                    "displayName": {
+                                        "type": "string",
+                                        "description": "The display name of the device."
+                                    },
+                                    "operatingSystem": {
+                                        "type": "string",
+                                        "description": "The operating system of the device."
+                                    },
+                                    "browser": {
+                                        "type": "string",
+                                        "description": "The browser used for the sign-in."
+                                    },
+                                    "isCompliant": {
+                                        "type": "boolean",
+                                        "description": "Indicates whether the device is compliant."
+                                    },
+                                    "isManaged": {
+                                        "type": "boolean",
+                                        "description": "Indicates whether the device is managed."
+                                    },
+                                    "trustType": {
+                                        "type": "string",
+                                        "description": "The trust type of the device."
+                                    }
+                                }
+                            },
+                            "location": {
+                                "type": "object",
+                                "properties": {
+                                    "city": {
+                                        "type": "string",
+                                        "description": "The city where the sign-in occurred."
+                                    },
+                                    "state": {
+                                        "type": "string",
+                                        "description": "The state where the sign-in occurred."
+                                    },
+                                    "countryOrRegion": {
+                                        "type": "string",
+                                        "description": "The country or region where the sign-in occurred."
+                                    },
+                                    "geoCoordinates": {
+                                        "type": "object",
+                                        "properties": {
+                                            "altitude": {
+                                                "type": "number",
+                                                "description": "The altitude of the sign-in location."
+                                            },
+                                            "latitude": {
+                                                "type": "number",
+                                                "description": "The latitude of the sign-in location."
+                                            },
+                                            "longitude": {
+                                                "type": "number",
+                                                "description": "The longitude of the sign-in location."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "appliedConditionalAccessPolicies": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "The unique identifier for the conditional access policy."
+                                        },
+                                        "displayName": {
+                                            "type": "string",
+                                            "description": "The display name of the conditional access policy."
+                                        },
+                                        "enforcedGrantControls": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "description": "The enforced grant controls for the conditional access policy."
+                                        },
+                                        "enforcedSessionControls": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "description": "The enforced session controls for the conditional access policy."
+                                        },
+                                        "result": {
+                                            "type": "string",
+                                            "description": "The result of the conditional access policy."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "GenericError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

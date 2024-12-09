@@ -1,0 +1,309 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Organization Management API",
+        "description": "Represents the Microsoft Entra tenant that the user or application is authenticated to that specified organization.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0",
+            "description": "Graph Microsoft Base URL"
+        }
+    ],
+    "paths": {
+        "/organization": {
+            "get": {
+                "summary": "Get organization",
+                "description": "Retrieve a list of all the properties and relationships of the currently authenticated organization",
+                "operationId": "Entra_Organization_GetOrganization",
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return (e.g., id).",
+                        "schema": {
+                            "type": "string",
+                            "example": "id",
+                            "enum": [],
+                            "x-enumDescriptions": {
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of one organization object in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Organization"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Find Tenant ID",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/organization?$select=id",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#organization",
+                                                "value": [
+                                                    {
+                                                        "id": "84841066-274d-4ec0-a5c1-276be684bdd3",
+                                                        "deletedDateTime": null,
+                                                        "businessPhones": [
+                                                            "425-555-0100"
+                                                        ],
+                                                        "city": null,
+                                                        "country": null,
+                                                        "countryLetterCode": "NL",
+                                                        "createdDateTime": "2021-08-02T10:30:06Z",
+                                                        "defaultUsageLocation": "String",
+                                                        "displayName": "Contoso",
+                                                        "isMultipleDataLocationsForServicesEnabled": null,
+                                                        "marketingNotificationEmails": [],
+                                                        "onPremisesLastSyncDateTime": null,
+                                                        "onPremisesSyncEnabled": null,
+                                                        "partnerTenantType": "ResellerPartnerDelegatedAdmin",
+                                                        "postalCode": null,
+                                                        "preferredLanguage": "en",
+                                                        "securityComplianceNotificationMails": [],
+                                                        "securityComplianceNotificationPhones": [],
+                                                        "state": null,
+                                                        "street": null,
+                                                        "technicalNotificationMails": [
+                                                            "admin@contoso.com"
+                                                        ],
+                                                        "tenantType": "AAD",
+                                                        "directorySizeQuota": {
+                                                            "used": 698,
+                                                            "total": 50000
+                                                        },
+                                                        "assignedPlans": [
+                                                            {
+                                                                "assignedDateTime": "2022-04-03T02:46:42Z",
+                                                                "capabilityStatus": "Deleted",
+                                                                "service": "Adallom",
+                                                                "servicePlanId": "932ad362-64a8-4783-9106-97849a1a30b9"
+                                                            },
+                                                            {
+                                                                "assignedDateTime": "2022-04-03T02:46:42Z",
+                                                                "capabilityStatus": "Deleted",
+                                                                "service": "MultiFactorService",
+                                                                "servicePlanId": "8a256a2b-b617-496d-b51b-e76466e88db0"
+                                                            },
+                                                            {
+                                                                "assignedDateTime": "2021-08-02T10:36:57Z",
+                                                                "capabilityStatus": "Enabled",
+                                                                "service": "exchange",
+                                                                "servicePlanId": "113feb6c-3fe4-4440-bddc-54d774bf0318"
+                                                            },
+                                                            {
+                                                                "assignedDateTime": "2021-08-02T10:36:02Z",
+                                                                "capabilityStatus": "Deleted",
+                                                                "service": "SCO",
+                                                                "servicePlanId": "882e1d05-acd1-4ccb-8708-6ee03664b117"
+                                                            }
+                                                        ],
+                                                        "privacyProfile": {
+                                                            "contactEmail": "",
+                                                            "statementUrl": ""
+                                                        },
+                                                        "provisionedPlans": [
+                                                            {
+                                                                "capabilityStatus": "Deleted",
+                                                                "provisioningStatus": "Success",
+                                                                "service": "Adallom"
+                                                            },
+                                                            {
+                                                                "capabilityStatus": "Enabled",
+                                                                "provisioningStatus": "Success",
+                                                                "service": "exchange"
+                                                            }
+                                                        ],
+                                                        "verifiedDomains": [
+                                                            {
+                                                                "capabilities": "Email, OfficeCommunicationsOnline",
+                                                                "isDefault": true,
+                                                                "isInitial": true,
+                                                                "name": "contoso.com",
+                                                                "type": "Managed"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default": "Access Microsoft Graph using application or delegated permissions"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Organization": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#users"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the organization."
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the organization."
+                            },
+                            "businessPhones": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "The business phone numbers for the organization."
+                            },
+                            "city": {
+                                "type": "string",
+                                "description": "The city where the organization is located."
+                            },
+                            "country": {
+                                "type": "string",
+                                "description": "The country where the organization is located."
+                            },
+                            "countryLetterCode": {
+                                "type": "string",
+                                "description": "The country letter code for the organization."
+                            },
+                            "postalCode": {
+                                "type": "string",
+                                "description": "The postal code for the organization."
+                            },
+                            "preferredLanguage": {
+                                "type": "string",
+                                "description": "The preferred language for the organization."
+                            },
+                            "state": {
+                                "type": "string",
+                                "description": "The state where the organization is located."
+                            },
+                            "street": {
+                                "type": "string",
+                                "description": "The street address for the organization."
+                            },
+                            "marketingNotificationEmails": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "The marketing notification emails for the organization."
+                            },
+                            "technicalNotificationMails": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "The technical notification emails for the organization."
+                            },
+                            "verifiedDomains": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "capabilities": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "description": "The capabilities of the verified domain."
+                                        },
+                                        "isDefault": {
+                                            "type": "boolean",
+                                            "description": "Indicates if the domain is the default domain."
+                                        },
+                                        "isInitial": {
+                                            "type": "boolean",
+                                            "description": "Indicates if the domain is the initial domain."
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "The name of the verified domain."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "description": "The type of the verified domain."
+                                        }
+                                    }
+                                },
+                                "description": "The verified domains for the organization."
+                            }
+                        }
+                    }
+                }
+            },
+            "GenericError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            },
+                            "target": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

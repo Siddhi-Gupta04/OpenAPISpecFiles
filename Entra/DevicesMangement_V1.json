@@ -1,0 +1,525 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Devices API",
+        "description": "API for managing devices in Microsoft Entra.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0/",
+            "description": "Graph Microsoft Base URL"
+        }
+    ],
+    "paths": {
+        "/devices": {
+            "get": {
+                "summary": "List devices",
+                "description": "Retrieve a list of devices in the directory.",
+                "operationId": "Entra_Devices_GetDevices",
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter devices based on specific criteria.",
+                        "schema": {
+                            "type": "string",
+                            "example": "accountEnabled eq true",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "required": false,
+                        "description": "Expand related entities.",
+                        "schema": {
+                            "type": "string",
+                            "example": "registeredOwners($select=id,displayName)",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return (e.g., id, displayName, isCompliant, isManaged).",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,isCompliant,isManaged",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of device objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Device"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "List all enabled devices",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=accountEnabled eq true",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "id": "12345",
+                                                        "displayName": "Enabled Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List all devices running Windows 11",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=operatingSystem eq 'Windows' and startswith(operatingSystemVersion, '11')",
+                                            "response": {
+                                                "value": [
+                                                    {
+
+                                                        "id": "67890",
+                                                        "displayName": "Windows 11 Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List devices with specific IDs",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=id in('id1', 'id2', 'id3')",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "id1",
+                                                        "displayName": "Device 1"
+                                                    },
+                                                    {
+                                                        "id": "id2",
+                                                        "displayName": "Device 2"
+                                                    },
+                                                    {
+                                                        "id": "id3",
+                                                        "displayName": "Device 3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List all devices and relative owners",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$expand=registeredOwners($select=id,displayName)&$select=id,displayName,isCompliant,isManaged",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "11111",
+                                                        "displayName": "Device with Owners",
+                                                        "isCompliant": true,
+                                                        "isManaged": true,
+                                                        "registeredOwners": [
+                                                            {
+                                                                "id": "owner1",
+                                                                "displayName": "Owner 1"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List non compliant devices",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=isCompliant eq false",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "22222",
+                                                        "displayName": "Non Compliant Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List managed devices",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=isManaged eq true",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "33333",
+                                                        "displayName": "Managed Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "get non-compliant devices",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=isCompliant eq false",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "22222",
+                                                        "displayName": "Non Compliant Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "devices not compliant",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=isCompliant eq false",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "22222",
+                                                        "displayName": "Non Compliant Device"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users of non-compliant devices",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices?$filter=isCompliant eq false&$expand=registeredUsers($select=id,displayName)&$select=id,displayName,isCompliant,isManaged",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#devices",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "44444",
+                                                        "displayName": "Non Compliant Device",
+                                                        "isCompliant": false,
+                                                        "isManaged": true,
+                                                        "registeredUsers": [
+                                                            {
+                                                                "id": "user2",
+                                                                "displayName": "User 2"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "users/<user-id>/ownedDevices/": {
+            "get": {
+                "summary": "Get the devices owned by a user",
+                "description": "Retrieve the devices owned by a specific user.",
+                "operationId": "Users_Devices_GetOwnedDevices",
+                "parameters": [
+                    {
+                        "name": "user-id",
+                        "in": "path",
+                        "required": true,
+                        "description": "The unique identifier for the user.",
+                        "schema": {
+                            "type": "string",
+                            "example": "user1",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "count",
+                        "in": "query",
+                        "required": false,
+                        "description": "Counter for the owned devices of the user",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and the count of owned devices in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "get number of devices owned by a user",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users/user1/ownedDevices/$count",
+                                            "response": "5"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "devices/<device-id>/registeredUsers": {
+            "get": {
+                "summary": "Get the registered users",
+                "description": "Retrieve the registered users for the device",
+                "operationId": "Users_Devices_GetRegisteredDevices",
+                "parameters": [
+                    {
+                        "name": "device-id",
+                        "in": "path",
+                        "required": true,
+                        "description": "The unique identifier for the user.",
+                        "schema": {
+                            "type": "string",
+                            "example": "device1",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and the count of owned devices in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "example": "#/components/schemas/RegisteredUsers"
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "list users of a device",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/devices/device1/registeredUsers",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/beta/$metadata#directoryObjects",
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.user",
+                                                        "@odata.id": "https://graph.microsoft.com/v2/72f988bf-86f1-41af-91ab-2d7cd011db47/directoryObjects/96a5df40-617b-4450-8b7a-1dc18b872d8f/Microsoft.DirectoryServices.User",
+                                                        "id": "96a5df40-617b-4450-8b7a-1dc18b872d8f",
+                                                        "displayName": "Alex Wilber",
+                                                        "mail": "AlexW@contoso.com",
+                                                        "mailNickname": "AlexW@contoso.com"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default": "Access Microsoft Graph API"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Device": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#applications(appId,identifierUris,displayName,publisherDomain,signInAudience)"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the device."
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the device."
+                            },
+                            "isCompliant": {
+                                "type": "boolean",
+                                "description": "Indicates whether the device is compliant."
+                            },
+                            "isManaged": {
+                                "type": "boolean",
+                                "description": "Indicates whether the device is managed."
+                            }
+                        }
+                    }
+                }
+            },
+            "RegisteredUsers": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#applications(appId,identifierUris,displayName,publisherDomain,signInAudience)"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "@odata.type": {
+                                "type": "string",
+                                "example": "#microsoft.graph.user"
+                            },
+                            "@odata.id": {
+                                "type": "string",
+                                "example": "https://graph.microsoft.com/v2/72f988bf-86f1-41af-91ab-2d7cd011db47/directoryObjects/96a5df40-617b-4450-8b7a-1dc18b872d8f/Microsoft.DirectoryServices.User"
+                            },
+                            "id": {
+                                "type": "string",
+                                "example": "96a5df40-617b-4450-8b7a-1dc18b872d8f"
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "example": "Alex Wilber"
+                            },
+                            "mail": {
+                                "type": "string",
+                                "example": "AlexW@contoso.com"
+                            },
+                            "mailNickname": {
+                                "type": "string",
+                                "example": "AlexW@contoso.com"
+                            }
+                        }
+                    }
+                }
+            },
+            "GenericError": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string"
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

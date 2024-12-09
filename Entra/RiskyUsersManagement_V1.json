@@ -1,0 +1,412 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Risky Users API",
+        "description": "Represents the risky users in the Microsoft Entra tenant.The risky users domain focuses on identifying and managing users who pose a potential security risk to the organization.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0",
+            "description": "Graph Microsoft Base URL"
+        }
+    ],
+    "paths": {
+        "/identityProtection/riskyUsers": {
+            "get": {
+                "summary": "List riskyUsers",
+                "description": "Retrieve a list of risky users in the organization.",
+                "operationId": "Entra_RiskyUsers_ListRiskyUsers",
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "riskLevel ne 'none' and riskState in ('atRisk', 'confirmedCompromised')",
+                            "enum": [],
+                            "x-enumDescriptions": {
+                            }
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id, userPrincipalName, riskLevel",
+                            "enum": [],
+                            "x-enumDescriptions": {
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of riskyUser objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RiskyUser"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "List risky users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/identityProtection/riskyUsers?$filter=riskLevel ne 'none' and riskState in ('atRisk', 'confirmedCompromised')",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.riskyUser",
+                                                        "id": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1",
+                                                        "isDeleted": "Boolean",
+                                                        "isProcessing": "Boolean",
+                                                        "riskLastUpdatedDateTime": "String (timestamp)",
+                                                        "riskLevel": "String",
+                                                        "riskState": "String",
+                                                        "riskDetail": "String",
+                                                        "userDisplayName": "String",
+                                                        "userPrincipalName": "String"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users at risk",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/identityProtection/riskyUsers?$filter=riskLevel ne 'none' and riskState in ('atRisk', 'confirmedCompromised')",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.riskyUser",
+                                                        "id": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1",
+                                                        "isDeleted": "Boolean",
+                                                        "isProcessing": "Boolean",
+                                                        "riskLastUpdatedDateTime": "String (timestamp)",
+                                                        "riskLevel": "String",
+                                                        "riskState": "String",
+                                                        "riskDetail": "String",
+                                                        "userDisplayName": "String",
+                                                        "userPrincipalName": "String"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Compromised users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/identityProtection/riskyUsers?$filter=riskState eq 'confirmedCompromised'",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.riskyUser",
+                                                        "id": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1",
+                                                        "isDeleted": "Boolean",
+                                                        "isProcessing": "Boolean",
+                                                        "riskLastUpdatedDateTime": "String (timestamp)",
+                                                        "riskLevel": "String",
+                                                        "riskState": "String",
+                                                        "riskDetail": "String",
+                                                        "userDisplayName": "String",
+                                                        "userPrincipalName": "String"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users that are safe",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/identityProtection/riskyUsers?$filter=riskState eq 'confirmedSafe'",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.riskyUser",
+                                                        "id": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1",
+                                                        "isDeleted": "Boolean",
+                                                        "isProcessing": "Boolean",
+                                                        "riskLastUpdatedDateTime": "String (timestamp)",
+                                                        "riskLevel": "String",
+                                                        "riskState": "String",
+                                                        "riskDetail": "String",
+                                                        "userDisplayName": "String",
+                                                        "userPrincipalName": "String"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/riskyUsers/<user-id>/history": {
+            "get": {
+                "summary": "Retrieve Risky User History",
+                "description": "Retrieve properties and relationships of a riskyUser object. Fetches the historical data of risky users, including their risk levels, states, and details over time.",
+                "operationId": "Entra_RiskyUsers_GetRiskyUsers",
+                "parameters": [
+                    {
+                        "name": "user-id",
+                        "in": "path",
+                        "required": true,
+                        "description": "The unique identifier of the risky user.",
+                        "schema": {
+                            "type": "string",
+                            "example": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1",
+                            "enum": [],
+                            "x-enumDescriptions": {
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of riskyUserHistory objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RiskyUserHistory"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Was user risky?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/identityProtection/riskyUsers/<user-id>/history",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "@odata.type": "#microsoft.graph.riskyUserHistoryItem",
+                                                        "id": "5e1d812e-812e-5e1d-2e81-1d5e2e811d5e",
+                                                        "isDeleted": "Boolean",
+                                                        "isProcessing": "Boolean",
+                                                        "riskLastUpdatedDateTime": "String (timestamp)",
+                                                        "riskLevel": "String",
+                                                        "riskState": "String",
+                                                        "riskDetail": "String",
+                                                        "userDisplayName": "String",
+                                                        "userPrincipalName": "String",
+                                                        "userId": "String",
+                                                        "initiatedBy": "String",
+                                                        "activity": {
+                                                            "riskEventTypes": [],
+                                                            "detail": "userPerformedSecuredPasswordReset"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default":"Access Microsoft Graph using application or delegated permissions"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "RiskyUser": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "@odata.type": {
+                                "type": "string",
+                                "example": "#microsoft.graph.riskyUser"
+                            },
+                            "id": {
+                                "type": "string",
+                                "format": "guid",
+                                "example": "d1d4a5d4-a5d4-d1d4-d4a5-d4d1d4a5d4d1"
+                            },
+                            "isDeleted": {
+                                "type": "boolean"
+                            },
+                            "isProcessing": {
+                                "type": "boolean"
+                            },
+                            "riskLastUpdatedDateTime": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "riskLevel": {
+                                "type": "string"
+                            },
+                            "riskState": {
+                                "type": "string"
+                            },
+                            "riskDetail": {
+                                "type": "string"
+                            },
+                            "userDisplayName": {
+                                "type": "string"
+                            },
+                            "userPrincipalName": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "RiskyUserHistory": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "@odata.type": {
+                                "type": "string",
+                                "example": "#microsoft.graph.riskyUserHistoryItem"
+                            },
+                            "id": {
+                                "type": "string",
+                                "example": "5e1d812e-812e-5e1d-2e81-1d5e2e811d5e"
+                            },
+                            "isDeleted": {
+                                "type": "boolean"
+                            },
+                            "isProcessing": {
+                                "type": "boolean"
+                            },
+                            "riskLastUpdatedDateTime": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "riskLevel": {
+                                "type": "string"
+                            },
+                            "riskState": {
+                                "type": "string"
+                            },
+                            "riskDetail": {
+                                "type": "string"
+                            },
+                            "userDisplayName": {
+                                "type": "string"
+                            },
+                            "userPrincipalName": {
+                                "type": "string"
+                            },
+                            "userId": {
+                                "type": "string"
+                            },
+                            "initiatedBy": {
+                                "type": "string"
+                            },
+                            "activity": {
+                                "type": "object",
+                                "properties": {
+                                    "riskEventTypes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "detail": {
+                                        "type": "string",
+                                        "example": "userPerformedSecuredPasswordReset"
+                                    }
+                                }
+                            },
+                            "GenericError": {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "string"
+                                            },
+                                            "message": {
+                                                "type": "string"
+                                            },
+                                            "target": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

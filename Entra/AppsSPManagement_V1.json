@@ -1,0 +1,528 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Microsoft Graph API for Applications and Service Principals",
+        "description": "API endpoints for managing applications and service principals in Microsoft Graph.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0",
+            "description": "Microsoft Graph Base URL"
+        }
+    ],
+    "paths": {
+        "/applications": {
+            "get": {
+                "summary": "Find application by name",
+                "description": "Retrieve applications in Entra.",
+                "operationId": "Entra_AppsSP_GetApplication",
+                "parameters": [
+                    {
+                        "name": "$search",
+                        "in": "query",
+                        "required": false,
+                        "description": "Search for applications by display name.",
+                        "schema": {
+                            "type": "string",
+                            "example": "\"displayName:\"",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and a collection of application objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Application"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Find application by name",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/applications?$search=\"displayName:\"&$select=id,displayName",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#applications(appId,identifierUris,displayName,publisherDomain,signInAudience)",
+                                                "@odata.count": 1396,
+                                                "value": [
+                                                    {
+                                                        "appId": "00000000-0000-0000-0000-000000000000",
+                                                        "identifierUris": [ "http://contoso/" ],
+                                                        "displayName": "My app",
+                                                        "publisherDomain": "contoso.com",
+                                                        "signInAudience": "AzureADMyOrg"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/servicePrincipals": {
+            "get": {
+                "summary": "Get service principals ",
+                "description": "Retrieve service principals in Entra",
+                "operationId": "Entra_AppsSP_GetServicePrincipals",
+                "parameters": [
+                    {
+                        "name": "$search",
+                        "in": "query",
+                        "required": false,
+                        "description": "Search for service principals by display name.",
+                        "schema": {
+                            "type": "string",
+                            "example": "\"displayName:\"",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter service principals with expired key credentials.",
+                        "schema": {
+                            "type": "string",
+                            "example": "keyCredentials/any(k:k/endDateTime le )",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,appId,displayName",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and collection of servicePrincipal objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ServicePrincipal"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Find service principals by name",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals?$search=\"displayName:\"&$select=id,appId,displayName",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "accountEnabled": true,
+                                                        "displayName": "amasf",
+                                                        "servicePrincipalType": "Application",
+                                                        "signInAudience": "AzureADMyOrg"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Get service principals with expired key credentials",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals?$filter=keyCredentials/any(k:k/endDateTime le )",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#servicePrincipals(id,displayName)",
+                                                "@odata.count": 3,
+                                                "value": [
+                                                    {
+
+                                                        "id": "c4ca17b7-4f3e-4c3a-b884-bfa4100c745d",
+                                                        "displayName": "Box"
+                                                    },
+                                                    {
+                                                        "id": "b5966bf3-e895-4f01-ae19-64f434c35b58",
+                                                        "displayName": "LinkedIn"
+                                                    },
+                                                    {
+                                                        "id": "ed17bd95-fbef-43eb-abea-9496e46eee42",
+                                                        "displayName": "BrowserStack"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Get ownerless service principals",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals?$filter=owners/$count eq 0",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#servicePrincipals(id,displayName)",
+                                                "@odata.count": 3,
+                                                "value": [
+                                                    {
+
+                                                        "id": "sp1",
+                                                        "displayName": "Service Principal 1"
+                                                    },
+                                                    {
+                                                        "id": "sp2",
+                                                        "displayName": "Service Principal 2"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "service principals without owner",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals?$filter=owners/$count eq 0",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#servicePrincipals(id,displayName)",
+                                                "@odata.count": 3,
+                                                "value": [
+                                                    {
+
+                                                        "id": "sp1",
+                                                        "displayName": "Service Principal 1"
+                                                    },
+                                                    {
+                                                        "id": "sp2",
+                                                        "displayName": "Service Principal 2"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/servicePrincipals/{id}/createdObjects": {
+            "get": {
+                "summary": "Get objects created by service principal",
+                "description": "Retrieve objects created by a specific service principal.",
+                "operationId": "Entra_ServicePrincipals_GetCreatedObjectsByServicePrincipal",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the service principal.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [],
+                            "x-enumDescriptions": {
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and collection of directoryObject objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Created-OwnedObject"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Get objects created by service principal",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals/12345/createdObjects",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "id": "id-value"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/servicePrincipals/{id}/ownedObjects": {
+            "get": {
+                "summary": "Get objects owned by service principal",
+                "description": "Retrieve objects owned by a specific service principal.",
+                "operationId": "Entra_AppsSP_GetOwnedObjectsByServicePrincipal",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the service principal.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and collection of directoryObject objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Created-OwnedObject"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Get objects owned by service principal",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/servicePrincipals/12345/ownedObjects",
+                                            "response": {
+                                                "value": [
+                                                    {
+                                                        "id": "id-value"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default": "Access Microsoft Graph API"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Application": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#applications(appId,identifierUris,displayName,publisherDomain,signInAudience)"
+                    },
+                    "@odata.count": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the application."
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the application."
+                            }
+                        }
+                    }
+                }
+            },
+            "ServicePrincipal": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "id": {
+                                "type": "string",
+                                "description": "The unique identifier for the service principal."
+                            },
+                            "appId": {
+                                "type": "string",
+                                "description": "The application ID of the service principal."
+                            },
+                            "displayName": {
+                                "type": "string",
+                                "description": "The display name of the service principal."
+                            },
+                            "accountEnabled": {
+                                "type": "boolean",
+                                "description": "Indicates whether the service principal account is enabled."
+                            },
+                            "servicePrincipalType": {
+                                "type": "string",
+                                "description": "The type of the service principal."
+                            },
+                            "signInAudience": {
+                                "type": "string",
+                                "description": "Specifies the audience that can sign in to the service principal."
+                            }
+                        }
+                    }
+                },
+                "Created-OwnedObject": {
+                    "type": "object",
+                    "properties": {
+                        "value": {
+                            "type": "array",
+                            "items": {
+                                "id": {
+                                    "type": "string",
+                                    "description": "The unique identifier for the created or owned object."
+                                }
+                            }
+                        }
+                    }
+                },
+                "GenericError": {
+                    "type": "object",
+                    "properties": {
+                        "error": {
+                            "type": "object",
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                },
+                                "target": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

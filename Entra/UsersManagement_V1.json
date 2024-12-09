@@ -1,0 +1,1332 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Microsoft Graph API for User Management",
+        "description": "API endpoints for managing users in Microsoft Graph.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://graph.microsoft.com/v1.0",
+            "description": "Microsoft Graph Base URL"
+        }
+    ],
+    "paths": {
+        "/me": {
+            "get": {
+                "summary": "Information about user",
+                "description": "Retrieve information about the signed-in user.",
+                "operationId": "Enta_User_GetMe",
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "type": "object",
+                                "schema": {
+                                    "$ref": "#/components/schemas/Me"
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "Who am I?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/me?$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "id": "12345",
+                                                "displayName": "John Doe",
+                                                "userPrincipalName": "john.doe@contoso.com",
+                                                "mail": "john.doe@contoso.com",
+                                                "userType": "Member",
+                                                "jobTitle": "Software Engineer",
+                                                "accountEnabled": true
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Tell me about myself",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/me?$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "id": "12345",
+                                                "displayName": "John Doe",
+                                                "userPrincipalName": "john.doe@contoso.com",
+                                                "mail": "john.doe@contoso.com",
+                                                "userType": "Member",
+                                                "jobTitle": "Software Engineer",
+                                                "accountEnabled": true
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "summary": "Get users",
+                "description": "Retrieve a list of users.",
+                "operationId": "Entra_User_GetUsers",
+                "parameters": [
+                    {
+                        "name": "$filter",
+                        "in": "query",
+                        "required": false,
+                        "description": "Filter items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "displayName eq 'Name Surname'",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$expand",
+                        "in": "query",
+                        "required": false,
+                        "description": "Expand related entities.",
+                        "schema": {
+                            "type": "string",
+                            "example": "manager($select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled)",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$count",
+                        "in": "query",
+                        "required": false,
+                        "description": "Include a count of the total number of items in the collection.",
+                        "schema": {
+                            "type": "boolean",
+                            "example": true,
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "required": false,
+                        "description": "Order items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "createdDateTime desc",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$top",
+                        "in": "query",
+                        "required": false,
+                        "description": "Show only the first n items.",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10,
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$search",
+                        "in": "query",
+                        "required": false,
+                        "description": "Search for items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "userPrincipalName:luca",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "If successful, this method returns a 200 OK response code and collection of user objects in the response body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "who is Name Surname's manager?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=displayName eq 'Name Surname'&$expand=manager($select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled)&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "value": [
+                                                    {
+                                                        "id": "12345",
+                                                        "displayName": "John Doe",
+                                                        "userPrincipalName": "john.doe@contoso.com",
+                                                        "mail": "john.doe@contoso.com",
+                                                        "userType": "Member",
+                                                        "jobTitle": "Software Engineer",
+                                                        "accountEnabled": true,
+                                                        "manager": {
+                                                            "id": "67890",
+                                                            "displayName": "Jane Smith",
+                                                            "userPrincipalName": "jane.smith@contoso.com",
+                                                            "mail": "jane.smith@contoso.com",
+                                                            "userType": "Member",
+                                                            "jobTitle": "Manager",
+                                                            "accountEnabled": true
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "how many non guest users my tenant has?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$count=true&$filter=userType ne 'guest'",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "how many non guest users my tenant has?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$count=true&$filter=userType ne 'guest'&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Give me all users that have hotmail.com as mail domain",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=endswith(mail,'hotmail.com')&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Get all users not starting with 'Conf'",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=NOT startsWith(displayName, 'Conf')&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7,
+                                                "value": [
+                                                    {
+                                                        "businessPhones": [],
+                                                        "displayName": "Conf Room Adams",
+                                                        "givenName": null,
+                                                        "jobTitle": null,
+                                                        "mail": "Adams@contoso.com",
+                                                        "mobilePhone": null,
+                                                        "officeLocation": null,
+                                                        "preferredLanguage": null,
+                                                        "surname": null,
+                                                        "userPrincipalName": "Adams@contoso.com",
+                                                        "id": "6ea91a8d-e32e-41a1-b7bd-d2d185eed0e0"
+                                                    },
+                                                    {
+                                                        "businessPhones": [
+                                                            "425-555-0100"
+                                                        ],
+                                                        "displayName": "MOD Administrator",
+                                                        "givenName": "MOD",
+                                                        "jobTitle": null,
+                                                        "mail": null,
+                                                        "mobilePhone": "425-555-0101",
+                                                        "officeLocation": null,
+                                                        "preferredLanguage": "en-US",
+                                                        "surname": "Administrator",
+                                                        "userPrincipalName": "admin@contoso.com",
+                                                        "id": "4562bcc8-c436-4f95-b7c0-4f8ce89dca5e"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Give me the last 5 created users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$orderBy=createdDateTime desc&$top=5&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7,
+                                                "value": [
+                                                    {
+                                                        "businessPhones": [],
+                                                        "displayName": "Conf Room Adams",
+                                                        "givenName": null,
+                                                        "jobTitle": null,
+                                                        "mail": "Adams@contoso.com",
+                                                        "mobilePhone": null,
+                                                        "officeLocation": null,
+                                                        "preferredLanguage": null,
+                                                        "surname": null,
+                                                        "userPrincipalName": "Adams@contoso.com",
+                                                        "id": "6ea91a8d-e32e-41a1-b7bd-d2d185eed0e0"
+                                                    },
+                                                    {
+                                                        "businessPhones": [
+                                                            "425-555-0100"
+                                                        ],
+                                                        "displayName": "MOD Administrator",
+                                                        "givenName": "MOD",
+                                                        "jobTitle": null,
+                                                        "mail": null,
+                                                        "mobilePhone": "425-555-0101",
+                                                        "officeLocation": null,
+                                                        "preferredLanguage": "en-US",
+                                                        "surname": "Administrator",
+                                                        "userPrincipalName": "admin@contoso.com",
+                                                        "id": "4562bcc8-c436-4f95-b7c0-4f8ce89dca5e"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List and count for users with 'room' in their mail nickname",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$count=true&$search=\"mailNickname:room\"&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 7,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Oscar Ward",
+                                                        "givenName": "Oscar",
+                                                        "mail": "oscaroom@contoso.com",
+                                                        "userPrincipalName": "oscarward@contoso.com"
+                                                    },
+                                                    {
+                                                        "displayName": "contosoAdmin1",
+                                                        "givenName": "Contoso Administrator",
+                                                        "mail": "'contosoadroom@fabrikam.com",
+                                                        "userPrincipalName": "contosoadmin1_fabrikam.com#EXT#@contoso.com"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Search for users with user principal name 'luca'",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$search=\"userPrincipalName:luca\"",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Show me the users with phone number 25478",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=startsWith(mobilePhone, '25478') OR businessPhones/any(x:startsWith(x,'25478'))",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "What are the companies of all the non-Contoso users?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=companyName ne 'Contoso' and companyName ne null",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Give me the last 10 created users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$orderBy=createdDateTime desc&$top=10",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List and count for users with 'room' in their mail nickname",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$search=\"mailNickname:room\"&$count=true",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 8,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyroomA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List all users in my tenant except those who have a Software Engineer job title",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=jobTitle ne 'Software Engineer'",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 9,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "List users without city in Finance department or those with a country in Marketing department",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=city eq null and department eq 'Finance' or country ne null and department eq 'Marketing'",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users without an assigned license",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=assignedLicenses/$count eq 0&$count=true",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "displayName": "Grady Archie",
+                                                        "givenName": "Grady",
+                                                        "jobTitle": "Designer",
+                                                        "mail": "GradyA@contoso.com",
+                                                        "userPrincipalName": "GradyA@contoso.com",
+                                                        "id": "e8b753b5-4117-464e-9a08-713e1ff266b3"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "Users with Global Administrator Role",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/roleManagement/directory/roleDefinitions?$filter=startsWith(displayName, 'Global Administrator')&$select=id,displayName",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "12345",
+                                                        "displayName": "Global Administrator"
+
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "User by otherMail",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/users?$filter=otherMails/any(om:om eq '<other mail>')",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#users",
+                                                "@odata.count": 1,
+                                                "value": [
+                                                    {
+                                                        "id": "12345",
+                                                        "displayName": "John Doe",
+                                                        "userPrincipalName": "john.doe@contoso.com",
+                                                        "mail": "john.doe@contoso.com",
+                                                        "userType": "Member",
+                                                        "jobTitle": "Software Engineer",
+                                                        "accountEnabled": true
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response describing why the operation failed.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/directory/deletedItems/graph.user?": {
+            "get": {
+                "summary": "Get Deleted Users",
+                "description": "Retrieve a list of deleted users from the directory. This endpoint allows you to get details of users who have been deleted, including their unique identifiers and other relevant information.",
+                "operationId": "Entra_User_GetDeletedUsers",
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$count",
+                        "in": "query",
+                        "required": false,
+                        "description": "Include a count of the total number of items in the collection.",
+                        "schema": {
+                            "type": "boolean",
+                            "example": true,
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    },
+                    {
+                        "name": "$orderby",
+                        "in": "query",
+                        "required": false,
+                        "description": "Order items by property values.",
+                        "schema": {
+                            "type": "string",
+                            "example": "createdDateTime desc",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DeletedUser"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "get last 10 deleted users",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/directory/deletedItems/graph.user?$count=true&$orderBy=deletedDateTime desc&$top=10&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups(id,displayName,deletedDateTime)",
+                                                "value": [
+                                                    {
+                                                        "id": "c31799b8-0683-4d70-9e91-e032c89d3035",
+                                                        "displayName": "Role assignable group",
+                                                        "deletedDateTime": "2021-10-26T16:56:36Z"
+                                                    },
+                                                    {
+                                                        "id": "74e45ce0-a52a-4766-976c-7201b0f99370",
+                                                        "displayName": "Role assignable group",
+                                                        "deletedDateTime": "2021-10-26T16:58:37Z"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "summary": "which are the 10 recently deleted users?",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/directory/deletedItems/graph.user?$count=true&$orderBy=deletedDateTime desc&$top=10&$select=id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#groups(id,displayName,deletedDateTime)",
+                                                "value": [
+                                                    {
+                                                        "id": "c31799b8-0683-4d70-9e91-e032c89d3035",
+                                                        "displayName": "Role assignable group",
+                                                        "deletedDateTime": "2021-10-26T16:56:36Z"
+                                                    },
+                                                    {
+                                                        "id": "74e45ce0-a52a-4766-976c-7201b0f99370",
+                                                        "displayName": "Role assignable group",
+                                                        "deletedDateTime": "2021-10-26T16:58:37Z"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/roleManagement/directory/roleDefinitions": {
+            "get": {
+                "summary": "Retrieve role definations",
+                "description": "Get a list of role definations in the directory.",
+                "operationId": "Entra_User_GetRoleDefinations",
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RoleManagement-RoleDefinations"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "users with Global Administrator Role",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/roleManagement/directory/roleDefinitions?$filter=startsWith(displayName, 'Global Administrator')&$select=id,displayName",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#roleManagement/directory/roleDefinitions",
+                                                "value": [
+                                                    {
+                                                        "id": "729827e3-9c14-49f7-bb1b-9608f156bbb8",
+                                                        "description": "Can reset passwords for non-administrators and Helpdesk Administrators.",
+                                                        "displayName": "Helpdesk Administrator",
+                                                        "isBuiltIn": true,
+                                                        "isEnabled": true,
+                                                        "templateId": "729827e3-9c14-49f7-bb1b-9608f156bbb8",
+                                                        "version": "1",
+                                                        "rolePermissions": [
+                                                            {
+                                                                "allowedResourceActions": [
+                                                                    "microsoft.directory/users/invalidateAllRefreshTokens",
+                                                                    "microsoft.directory/users/bitLockerRecoveryKeys/read",
+                                                                    "microsoft.directory/users/password/update",
+                                                                    "microsoft.azure.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.azure.supportTickets/allEntities/allTasks",
+                                                                    "microsoft.office365.webPortal/allEntities/standard/read",
+                                                                    "microsoft.office365.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.office365.supportTickets/allEntities/allTasks"
+                                                                ],
+                                                                "condition": null
+                                                            }
+                                                        ],
+                                                        "inheritsPermissionsFrom": [
+                                                            {
+                                                                "id": "88d8e3e3-8f55-4a1e-953a-9b9898b8876b"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "id": "f023fd81-a637-4b56-95fd-791ac0226033",
+                                                        "description": "Can read service health information and manage support tickets.",
+                                                        "displayName": "Service Support Administrator",
+                                                        "isBuiltIn": true,
+                                                        "isEnabled": true,
+                                                        "templateId": "f023fd81-a637-4b56-95fd-791ac0226033",
+                                                        "version": "1",
+                                                        "rolePermissions": [
+                                                            {
+                                                                "allowedResourceActions": [
+                                                                    "microsoft.azure.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.azure.supportTickets/allEntities/allTasks",
+                                                                    "microsoft.office365.webPortal/allEntities/standard/read",
+                                                                    "microsoft.office365.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.office365.supportTickets/allEntities/allTasks"
+                                                                ],
+                                                                "condition": null
+                                                            }
+                                                        ],
+                                                        "inheritsPermissionsFrom": [
+                                                            {
+                                                                "id": "88d8e3e3-8f55-4a1e-953a-9b9898b8876b"
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "id": "b0f54661-2d74-4c50-afa3-1ec803f12efe",
+                                                        "description": "Can perform common billing related tasks like updating payment information.",
+                                                        "displayName": "Billing Administrator",
+                                                        "isBuiltIn": true,
+                                                        "isEnabled": true,
+                                                        "templateId": "b0f54661-2d74-4c50-afa3-1ec803f12efe",
+                                                        "version": "1",
+                                                        "rolePermissions": [
+                                                            {
+                                                                "allowedResourceActions": [
+                                                                    "microsoft.directory/organization/basic/update",
+                                                                    "microsoft.azure.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.azure.supportTickets/allEntities/allTasks",
+                                                                    "microsoft.commerce.billing/allEntities/allTasks",
+                                                                    "microsoft.office365.webPortal/allEntities/standard/read",
+                                                                    "microsoft.office365.serviceHealth/allEntities/allTasks",
+                                                                    "microsoft.office365.supportTickets/allEntities/allTasks"
+                                                                ],
+                                                                "condition": null
+                                                            }
+                                                        ],
+                                                        "inheritsPermissionsFrom": [
+                                                            {
+                                                                "id": "88d8e3e3-8f55-4a1e-953a-9b9898b8876b"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/roleManagement/directory/roleAssignments": {
+            "get": {
+                "summary": "Retrieve role assignments",
+                "description": "Get a list of role assignments in the directory. This includes details about the roles assigned to users and groups.",
+                "operationId": "Entra_User_GetRoleAssignments",
+                "parameters": [
+                    {
+                        "name": "$select",
+                        "in": "query",
+                        "required": false,
+                        "description": "Select specific fields to return.",
+                        "schema": {
+                            "type": "string",
+                            "example": "id,displayName,userPrincipalName,mail,userType,jobTitle,accountEnabled",
+                            "enum": [],
+                            "x-enumDescriptions": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RoleManagement-RoleDefinations"
+                                    }
+                                },
+                                "examples": [
+                                    {
+                                        "summary": "users with Global Administrator Role",
+                                        "value": {
+                                            "request": {},
+                                            "requestUrl": "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?$filter=roleDefinitionId eq '<roleDefinitionId>'&$expand=principal($select=id,displayName,userPrincipalName)&$select=id",
+                                            "response": {
+                                                "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#roleManagement/directory/roleAssignments(principal())",
+                                                "value": [
+                                                    {
+                                                        "id": "lAPpYvVpN0KRkAEhdxReEMmO4KwRqtpKkUWt3wOYIz4-1",
+                                                        "principalId": "ace08ec9-aa11-4ada-9145-addf0398233e",
+                                                        "resourceScope": "/",
+                                                        "directoryScopeId": "/",
+                                                        "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+                                                        "principal": {
+                                                            "@odata.type": "#microsoft.graph.user",
+                                                            "id": "ace08ec9-aa11-4ada-9145-addf0398233e",
+                                                            "accountEnabled": true,
+                                                            "displayName": "Joey Cruz",
+                                                            "imAddresses": [
+                                                                "joeyc@contoso.com"
+                                                            ],
+                                                            "mail": "joeyc@contoso.com",
+                                                            "mailNickname": "joeyc",
+                                                            "userType": "Member"
+
+                                                        }
+                                                    },
+                                                    {
+                                                        "id": "lAPpYvVpN0KRkAEhdxReEC6Xh29-LklLmYDrOIi9z-E-1",
+                                                        "principalId": "6f87972e-2e7e-4b49-9980-eb3888bdcfe1",
+                                                        "resourceScope": "/",
+                                                        "directoryScopeId": "/",
+                                                        "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+                                                        "principal": {
+                                                            "@odata.type": "#microsoft.graph.user",
+                                                            "id": "6f87972e-2e7e-4b49-9980-eb3888bdcfe1",
+                                                            "accountEnabled": true,
+                                                            "displayName": "Kalyan Krishna",
+                                                            "imAddresses": [],
+                                                            "userType": "Guest"
+
+                                                        }
+                                                    },
+                                                    {
+                                                        "id": "lAPpYvVpN0KRkAEhdxReEMgc_BA2rIZBuZsM-BSqLdU-1",
+                                                        "principalId": "10fc1cc8-ac36-4186-b99b-0cf814aa2dd5",
+                                                        "resourceScope": "/",
+                                                        "directoryScopeId": "/",
+                                                        "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+                                                        "principal": {
+                                                            "@odata.type": "#microsoft.graph.user",
+                                                            "id": "10fc1cc8-ac36-4186-b99b-0cf814aa2dd5",
+                                                            "accountEnabled": true,
+                                                            "displayName": "Markie Downing",
+                                                            "imAddresses": [],
+                                                            "userType": "Guest"
+
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    },
+                    "default": {
+                        "description": "Error response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenericError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "graph_auth_obo": [
+                            "https://graph.microsoft.com/.default"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "graph_auth_obo": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+                        "scopes": {
+                            "https://graph.microsoft.com/.default": "Access Microsoft Graph using application or delegated permissions"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Me": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "12345"
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "userPrincipalName": {
+                        "type": "string",
+                        "example": "john.doe@contoso.com"
+                    },
+                    "mail": {
+                        "type": "string",
+                        "example": "john.doe@contoso.com"
+                    },
+                    "userType": {
+                        "type": "string",
+                        "example": "Member"
+                    },
+                    "jobTitle": {
+                        "type": "string",
+                        "example": "Software Engineer"
+                    },
+                    "accountEnabled": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "User": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#users"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "12345"
+                                },
+                                "displayName": {
+                                    "type": "string",
+                                    "example": "John Doe"
+                                },
+                                "userPrincipalName": {
+                                    "type": "string",
+                                    "example": "john.doe@contoso.com"
+                                },
+                                "mail": {
+                                    "type": "string",
+                                    "example": "john.doe@contoso.com"
+                                },
+                                "userType": {
+                                    "type": "string",
+                                    "example": "Member"
+                                },
+                                "jobTitle": {
+                                    "type": "string",
+                                    "example": "Software Engineer"
+                                },
+                                "accountEnabled": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "manager": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67890"
+                                        },
+                                        "displayName": {
+                                            "type": "string",
+                                            "example": "Jane Smith"
+                                        },
+                                        "userPrincipalName": {
+                                            "type": "string",
+                                            "example": "jane.smith@contoso.com"
+                                        },
+                                        "mail": {
+                                            "type": "string",
+                                            "example": "jane.smith@contoso.com"
+                                        },
+                                        "userType": {
+                                            "type": "string",
+                                            "example": "Member"
+                                        },
+                                        "jobTitle": {
+                                            "type": "string",
+                                            "example": "Manager"
+                                        },
+                                        "accountEnabled": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "RoleManagement-RoleDefinations": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#users"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "12345"
+                                },
+                                "displayName": {
+                                    "type": "string",
+                                    "example": "John Doe"
+                                },
+                                "userPrincipalName": {
+                                    "type": "string",
+                                    "example": "john.doe@contoso.com"
+                                },
+                                "mail": {
+                                    "type": "string",
+                                    "example": "john.doe@contoso.com"
+                                },
+                                "userType": {
+                                    "type": "string",
+                                    "example": "Member"
+                                },
+                                "jobTitle": {
+                                    "type": "string",
+                                    "example": "Software Engineer"
+                                },
+                                "accountEnabled": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "manager": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "example": "67890"
+                                        },
+                                        "displayName": {
+                                            "type": "string",
+                                            "example": "Jane Smith"
+                                        },
+                                        "userPrincipalName": {
+                                            "type": "string",
+                                            "example": "jane.smith@contoso.com"
+                                        },
+                                        "mail": {
+                                            "type": "string",
+                                            "example": "jane.smith@contoso.com"
+                                        },
+                                        "userType": {
+                                            "type": "string",
+                                            "example": "Member"
+                                        },
+                                        "jobTitle": {
+                                            "type": "string",
+                                            "example": "Manager"
+                                        },
+                                        "accountEnabled": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "RoleManagement-RoleAssignments": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#roleManagement/directory/roleAssignments(principal())"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "lAPpYvVpN0KRkAEhdxReEMmO4KwRqtpKkUWt3wOYIz4-1"
+                                },
+                                "principalId": {
+                                    "type": "string",
+                                    "example": "ace08ec9-aa11-4ada-9145-addf0398233e"
+                                },
+                                "resourceScope": {
+                                    "type": "string",
+                                    "example": "/"
+                                },
+                                "directoryScopeId": {
+                                    "type": "string",
+                                    "example": "/"
+                                },
+                                "roleDefinitionId": {
+                                    "type": "string",
+                                    "example": "62e90394-69f5-4237-9190-012177145e10"
+                                },
+                                "principal": {
+                                    "type": "object",
+                                    "properties": {
+                                        "@odata.type": {
+                                            "type": "string",
+                                            "example": "#microsoft.graph.user"
+                                        },
+                                        "id": {
+                                            "type": "string",
+                                            "example": "ace08ec9-aa11-4ada-9145-addf0398233e"
+                                        },
+                                        "accountEnabled": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "displayName": {
+                                            "type": "string",
+                                            "example": "Joey Cruz"
+                                        },
+                                        "imAddresses": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "joeyc@contoso.com"
+                                            }
+                                        },
+                                        "mail": {
+                                            "type": "string",
+                                            "example": "joeyc@contoso.com"
+                                        },
+                                        "mailNickname": {
+                                            "type": "string",
+                                            "example": "joeyc"
+                                        },
+                                        "userType": {
+                                            "type": "string",
+                                            "example": "Member"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "DeletedUser": {
+                "type": "object",
+                "properties": {
+                    "@odata.context": {
+                        "type": "string",
+                        "example": "https://graph.microsoft.com/v1.0/$metadata#groups(id,displayName,deletedDateTime)"
+                    },
+                    "value": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "c31799b8-0683-4d70-9e91-e032c89d3035"
+                                },
+                                "displayName": {
+                                    "type": "string",
+                                    "example": "Role assignable group"
+                                },
+                                "deletedDateTime": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2021-10-26T16:56:36Z"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
